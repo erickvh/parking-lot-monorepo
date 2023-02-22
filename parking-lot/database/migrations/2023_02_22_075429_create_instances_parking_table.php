@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('parking_instances', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
+            $table->time('checkin');
+            $table->time('checkout')->nullable();
+            $table->integer('minutes')->default(0);
+            $table->decimal('amount', 8, 2)->default(0);
+            $table->boolean('is_paid')->default(false);
+            $table->foreignId('vehicle_id')->constrained('vehicles');
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('parking_instances');
     }
 };

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Parking\ParkingController;
+use App\Http\Controllers\Vehicle\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('vehicle')->middleware(['auth.ms'])->group(function () {
+    Route::post('/', [VehicleController::class, 'createVehicle']);
+    Route::get('/', [VehicleController::class, 'getVehicle']);
+    Route::get('/by-type', [VehicleController::class, 'getVehiclesByType']);
+});
+
+Route::prefix('parking')->middleware(['auth.ms'])->group(function () {
+    Route::post('/checkin', [ParkingController::class, 'checkin']);
+    Route::post('/checkout', [ParkingController::class, 'checkout']);
+    Route::get('/instances-by-plate', [ParkingController::class, 'getParkingInstancesByPlate']);
+    Route::get('/instances', [ParkingController::class, 'getParkingInstances']);
+    Route::put('instances/{id}/paid', [ParkingController::class, 'updateParkingInstance']);
 });
