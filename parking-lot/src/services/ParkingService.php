@@ -85,6 +85,48 @@ class ParkingService
 
         return [
             'message' => $message,
+            "should_pay" => $vehicle->type->payment_rules == 'as_visitor'
         ];
+    }
+
+    public function getParkingInstancesByPlate($plate)
+    {
+        $vehicle = Vehicle::where('plate', $plate)->first();
+
+        if (!$vehicle) return ["message" => "Vehicle not found"];
+
+        $instances = Instance::with('vehicle')->where('vehicle_id', $vehicle->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $instances;
+    }
+
+
+    public function getParkingInstances()
+    {
+        $instances = Instance::with('vehicle')
+            ->where('amount', '>', 0.0)
+            ->where('is_paid', false)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $instances;
+    }
+
+
+    public function updateParkingInstance($id)
+    {
+        $instance = Instance::where('id', $id)->where('is_paid', false)->first();
+        if (!$instance) return ["message" => "Instance not found"];
+
+        $vehicle = Vehicle::with('type')->find($instance->vehicle_id);
+
+        if ($vehicle->type->payment_rules != 'as_visitor') return ["message" => "This instance is not paid / paid monthly"];
+
+        $instance->is_paid = true;
+        $instance->save();
+
+        return ["message" => "success update instance as paid"];
     }
 }

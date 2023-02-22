@@ -2,6 +2,7 @@
 
 namespace App\Models\Parking;
 
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -26,4 +26,26 @@ class ParkingController extends Controller
         $vehicle = $this->parkingService->checkoutVehicle($request);
         return $vehicle;
     }
+
+    public function getParkingInstancesByPlate(Request $request)
+    {
+
+        if (!$request->plate) return response()->json(["message" => "plate is required"], 400);
+
+        $parkingInstances = $this->parkingService->getParkingInstancesByPlate($request->plate);
+        return $parkingInstances;
+    }
+
+    public function getParkingInstances()
+    {
+        $parkingInstances = $this->parkingService->getParkingInstances();
+        return $parkingInstances;
+    }
+
+
+    public function updateParkingInstance($id)
+    {
+        $parkingInstances = $this->parkingService->updateParkingInstance($id);
+        return $parkingInstances;
+    }
 }

@@ -16,13 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('vehicle')->group(function () {
+Route::prefix('vehicle')->middleware(['auth.ms'])->group(function () {
     Route::post('/', [VehicleController::class, 'createVehicle']);
     Route::get('/', [VehicleController::class, 'getVehicle']);
-    Route::get('/by_type', [VehicleController::class, 'getVehiclesByType']);
+    Route::get('/by-type', [VehicleController::class, 'getVehiclesByType']);
 });
 
 Route::prefix('parking')->group(function () {
     Route::post('/checkin', [ParkingController::class, 'checkin']);
     Route::post('/checkout', [ParkingController::class, 'checkout']);
+    Route::get('/instances-by-plate', [ParkingController::class, 'getParkingInstancesByPlate']);
+    Route::get('/instances', [ParkingController::class, 'getParkingInstances']);
+    Route::put('instances/{id}/paid', [ParkingController::class, 'updateParkingInstance']);
 });
