@@ -15,31 +15,15 @@ class ParkingController extends Controller
     {
         $this->parkingService = new ParkingService();
     }
-    public function checkin($id)
+    public function checkin(Request $request)
     {
-        $vehicle = $this->parkingService->checkin($id);
-        return $vehicle;
+        $message = $this->parkingService->checkinVehicle($request);
+        return response()->json($message, 200);
     }
 
-    public function checkout($id)
+    public function checkout(Request $request)
     {
-        $vehicle = $this->parkingService->checkout($id);
-        return $vehicle;
-    }
-
-
-    public function checkinVisitor(Request $request)
-    {
-
-        $vehicle = $this->parkingService->checkinVisitor($request);
-
-        return $vehicle;
-    }
-
-    public function checkoutVisitor(Request $request)
-    {
-        $vehicle = $this->parkingService->checkoutVisitor($request);
-
+        $vehicle = $this->parkingService->checkoutVehicle($request);
         return $vehicle;
     }
 }

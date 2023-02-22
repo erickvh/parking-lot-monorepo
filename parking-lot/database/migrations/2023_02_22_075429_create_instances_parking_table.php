@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('checkin');
             $table->time('checkout')->nullable();
             $table->integer('minutes')->default(0);
-            $table->integer('amount')->default(0);
+            $table->decimal('amount', 8, 2)->default(0);
             $table->boolean('is_paid')->default(false);
             $table->foreignId('vehicle_id')->constrained('vehicles');
         });

@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('vehicle')->group(function () {
     Route::post('/', [VehicleController::class, 'createVehicle']);
+    Route::get('/', [VehicleController::class, 'getVehicle']);
+    Route::get('/by_type', [VehicleController::class, 'getVehiclesByType']);
 });
 
 Route::prefix('parking')->group(function () {
-    Route::get('/{id}/checkin', [ParkingController::class, 'checkin']);
-    Route::get('/{id}/checkout', [ParkingController::class, 'checkout']);
-    Route::post('/checkin-visitor', [ParkingController::class, 'checkinVisitor']);
-    Route::post('/checkout-visitor', [ParkingController::class, 'checkoutVisitor']);
+    Route::post('/checkin', [ParkingController::class, 'checkin']);
+    Route::post('/checkout', [ParkingController::class, 'checkout']);
 });

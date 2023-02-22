@@ -15,49 +15,6 @@ class ParkingService
         $this->vehicleService = new VehicleService();
     }
 
-    public function checkin($id)
-    {
-        $vehicle = Vehicle::find($id);
-
-        return $vehicle;
-    }
-
-
-
-    public function checkout($id)
-    {
-        $vehicle = Vehicle::find($id);
-
-        return $vehicle;
-    }
-
-
-    public function checkinVisitor($request)
-    {
-        $message = '';
-
-        $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
-
-
-        if ($vehicle && $vehicle->type->payment_rules != 'as_visitor') return ["message" => "It's not a visitor vehicle"];
-
-
-        if (!$vehicle) {
-            $request->type = 'as_visitor';
-            $vehicle = $this->vehicleService->createVehicle($request);
-        }
-
-        Instance::create([
-            'vehicle_id' => $vehicle->id,
-            'checkin' => now()
-        ]);
-
-        $message = "success checkin $vehicle->plate as visitor";
-
-        return [
-            'message' => $message,
-        ];
-    }
 
     private function calculateInstanceOfParking($instance)
     {
@@ -72,17 +29,41 @@ class ParkingService
 
         $total = $diff * $vehicle_price_rate;
 
-        return $total;
+        return ["total" => $total, "minutes" => $diff];
     }
 
 
-    public function checkoutVisitor($request)
+
+
+    public function checkinVehicle($request)
     {
         $message = '';
 
         $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
 
-        if ($vehicle && $vehicle->type->payment_rules != 'as_visitor') return ["message" => "It's not a visitor vehicle"];
+        if (!$vehicle) {
+            $request->type = 'as_visitor';
+            $vehicle = $this->vehicleService->createVehicle($request);
+        }
+
+        Instance::create([
+            'vehicle_id' => $vehicle->id,
+            'checkin' => now()
+        ]);
+
+        $message = "success checkin $vehicle->plate as {$vehicle->type->name}";
+
+
+        return [
+            'message' => $message,
+        ];
+    }
+
+    public function checkoutVehicle($request)
+    {
+        $message = '';
+
+        $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
 
         if (!$vehicle) return ["message" => "Vehicle not found"];
 
@@ -93,12 +74,14 @@ class ParkingService
 
         $instance->checkout = now();
 
-        $total = $this->calculateInstanceOfParking($instance);
-
+        list("total" => $total, "minutes" => $minutes) = $this->calculateInstanceOfParking($instance);
         $instance->amount = $total;
+        $instance->minutes = $minutes;
 
         $instance->save();
-        $message = "success checkout $vehicle->plate as visitor";
+
+        $message = "success checkout $vehicle->plate as {$vehicle->type->name}, parking time: $minutes minutes";
+        $message .= ($vehicle->type->payment_rules == 'as_visitor') ? ", total: $total" : '';
 
         return [
             'message' => $message,

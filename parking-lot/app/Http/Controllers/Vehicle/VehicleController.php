@@ -20,4 +20,17 @@ class VehicleController extends Controller
         $vehicle = $this->vehicleService->createVehicle($request);
         return response()->json(["message" => "success", "vehicle" => $vehicle], 201);
     }
+
+
+    public function getVehicle(Request $request)
+    {
+        $vehicle = $this->vehicleService->getVehicle($request);
+        return response()->json(["message" => "success", "vehicle" => $vehicle], 200);
+    }
+
+    public function getVehiclesByType(Request $request)
+    {
+        $vehicles = $this->vehicleService->getVehiclesByType($request);
+        return response()->json(["message" => "success", "vehicles" => $vehicles], 200);
+    }
 }

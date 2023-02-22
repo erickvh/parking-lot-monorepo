@@ -22,4 +22,20 @@ class VehicleService
 
         return $vehicle;
     }
+
+    public function getVehicle($request)
+    {
+        $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
+        return $vehicle;
+    }
+
+
+    public function getVehiclesByType($request)
+    {
+
+        $vehicles = Vehicle::with('type')->whereHas('type', function ($q) use ($request) {
+            $q->where('payment_rules', $request->type);
+        })->get();
+        return $vehicles;
+    }
 }
