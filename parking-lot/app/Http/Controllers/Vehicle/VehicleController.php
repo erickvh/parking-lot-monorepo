@@ -34,11 +34,11 @@ class VehicleController extends Controller
     }
 
 
-    public function checkinVisitors(Request $request)
+    public function checkinVisitor(Request $request)
     {
-        // $vehicles = $request->vehicles;
-        // $vehicles = json_decode($vehicles);
-        // $vehicles = $this->vehicleService->checkinVisitors($vehicles);
-        // return $vehicles;
+        // dd($request->all());
+        $vehicle = $this->vehicleService->checkinVisitor($request);
+
+        return $vehicle;
     }
 }

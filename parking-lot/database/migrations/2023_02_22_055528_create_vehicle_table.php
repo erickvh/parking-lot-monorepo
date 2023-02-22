@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->string('plate', 7)->unique();
-            $table->string('brand', 20);
-            $table->string('color', 20);
+            $table->string('brand', 20)->nullable();
+            $table->string('color', 20)->nullable();
             $table->foreignId('type_id')->constrained('type_vehicles')->onDelete('cascade');
             $table->timestamps();
         });

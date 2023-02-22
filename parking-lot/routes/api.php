@@ -19,5 +19,6 @@ Route::prefix('vehicle')->group(function () {
     Route::post('/', [VehicleController::class, 'createVehicle']);
     Route::get('/{id}/checkin', [VehicleController::class, 'checkin']);
     Route::get('/{id}/checkout', [VehicleController::class, 'checkout']);
-    Route::post('/checkin-visitors', [VehicleController::class, 'checkinVisitors']);
 });
+
+Route::post('/checkin-visitor', [VehicleController::class, 'checkinVisitor']);

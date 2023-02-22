@@ -30,6 +30,28 @@ class VehicleService
         return $vehicle;
     }
 
+    public function checkinVisitor($request)
+    {
+        $message = '';
+
+        $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
+
+
+        if ($vehicle && $vehicle->type->payment_rules != 'as_visitor') return "It's not a visitor vehicle";
+
+
+        if (!$vehicle) {
+            $request->type = 'as_visitor';
+            $vehicle = $this->createVehicle($request);
+        }
+
+
+
+        return [
+            'message' => $message,
+        ];
+    }
+
     public function checkout($id)
     {
         $vehicle = Vehicle::find($id);
