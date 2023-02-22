@@ -22,7 +22,7 @@ Route::prefix('vehicle')->middleware(['auth.ms'])->group(function () {
     Route::get('/by-type', [VehicleController::class, 'getVehiclesByType']);
 });
 
-Route::prefix('parking')->group(function () {
+Route::prefix('parking')->middleware(['auth.ms'])->group(function () {
     Route::post('/checkin', [ParkingController::class, 'checkin']);
     Route::post('/checkout', [ParkingController::class, 'checkout']);
     Route::get('/instances-by-plate', [ParkingController::class, 'getParkingInstancesByPlate']);
