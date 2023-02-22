@@ -9,6 +9,11 @@ class TypeVehicle extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
+
     protected $fillable = [
         'name',
         'payment_rules',

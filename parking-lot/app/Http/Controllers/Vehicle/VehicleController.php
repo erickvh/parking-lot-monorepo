@@ -20,25 +20,4 @@ class VehicleController extends Controller
         $vehicle = $this->vehicleService->createVehicle($request);
         return response()->json(["message" => "success", "vehicle" => $vehicle], 201);
     }
-
-    public function checkin($id)
-    {
-        $vehicle = $this->vehicleService->checkin($id);
-        return $vehicle;
-    }
-
-    public function checkout($id)
-    {
-        $vehicle = $this->vehicleService->checkout($id);
-        return $vehicle;
-    }
-
-
-    public function checkinVisitor(Request $request)
-    {
-        // dd($request->all());
-        $vehicle = $this->vehicleService->checkinVisitor($request);
-
-        return $vehicle;
-    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Parking\ParkingController;
 use App\Http\Controllers\Vehicle\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,8 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('vehicle')->group(function () {
     Route::post('/', [VehicleController::class, 'createVehicle']);
-    Route::get('/{id}/checkin', [VehicleController::class, 'checkin']);
-    Route::get('/{id}/checkout', [VehicleController::class, 'checkout']);
 });
 
-Route::post('/checkin-visitor', [VehicleController::class, 'checkinVisitor']);
+Route::prefix('parking')->group(function () {
+    Route::get('/{id}/checkin', [ParkingController::class, 'checkin']);
+    Route::get('/{id}/checkout', [ParkingController::class, 'checkout']);
+    Route::post('/checkin-visitor', [ParkingController::class, 'checkinVisitor']);
+    Route::post('/checkout-visitor', [ParkingController::class, 'checkoutVisitor']);
+});

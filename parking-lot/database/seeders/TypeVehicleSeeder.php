@@ -25,12 +25,14 @@ class TypeVehicleSeeder extends Seeder
             'name' => 'Resident Vehicle',
             'description' => 'This is a resident vehicle that can park in the parking lot (monthly payment)',
             'payment_rules' => 'as_resident',
+            "price" => 0.05
         ]);
 
         TypeVehicle::create([
             'name' => 'Visitor Vehicle',
             'description' => 'This is a visitor vehicle that can park in the parking lot (pay as you go)',
             'payment_rules' => 'as_visitor',
+            "price" => 0.5,
         ]);
     }
 }
