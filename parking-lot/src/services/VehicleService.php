@@ -9,7 +9,9 @@ class VehicleService
 {
     public function createVehicle($request)
     {
+        $request->plate = strtoupper($request->plate);
         $type = TypeVehicle::where('payment_rules', $request->type)->first();
+
 
         $vehicle = Vehicle::create([
             'plate' => $request->plate,
@@ -17,6 +19,20 @@ class VehicleService
             'color' => $request->color,
             'type_id' => $type->id,
         ]);
+
+        return $vehicle;
+    }
+
+    public function checkin($id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        return $vehicle;
+    }
+
+    public function checkout($id)
+    {
+        $vehicle = Vehicle::find($id);
 
         return $vehicle;
     }
