@@ -5,42 +5,34 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
+use App\services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    private $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthService();
+    }
+
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)
-            ->first();
 
+        $body = $this->authService->login($request);
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Bad credentials'
-            ], 401);
-        }
-        $body = [
-            'message' => 'success',
-            'user' => $user,
-            'token' => $user->createToken('token')->plainTextToken,
-        ];
+        return response()->json($body);
     }
 
     public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = $this->authService->register($request);
 
         return response()->json([
             'message' => 'success',
             'user' => $user,
-            'token' => $user->createToken('token')->plainTextToken,
         ]);
     }
 
@@ -48,10 +40,8 @@ class AuthController extends Controller
     {
 
 
-        $request->user()->currentAccessToken()->delete();
+        $body = $this->authService->logout($request);
 
-        return response([
-            'message' => 'User logged out'
-        ]);
+        return response()->json($body);
     }
 }
