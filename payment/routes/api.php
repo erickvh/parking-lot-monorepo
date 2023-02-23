@@ -18,4 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("payment")->group(function () {
 
     Route::get("resident-debts", [PaymentController::class, "getResidentReport"]);
+    Route::post("restart-month", [PaymentController::class, "restartMonth"]);
+    Route::post("pay-instance-visitor/{id}", [PaymentController::class, "payInstanceVisitor"]);
 });
