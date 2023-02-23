@@ -5,6 +5,8 @@ namespace App\services;
 use App\Models\Parking\Instance;
 use App\Models\Vehicle;
 use App\services\VehicleService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ParkingService
 {
@@ -65,12 +67,12 @@ class ParkingService
 
         $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
 
-        if (!$vehicle) return ["message" => "Vehicle not found"];
+        if (!$vehicle) return throw new HttpException(404, "Vehicle not found");
 
         $instance = Instance::where('vehicle_id', $vehicle->id)->whereNull('checkout')->first();
 
 
-        if (!$instance) return ["message" => "Instance not found for this vehicle"];
+        if (!$instance) return throw new HttpException(404, "Instance not found");
 
         $instance->checkout = now();
 
@@ -93,7 +95,7 @@ class ParkingService
     {
         $vehicle = Vehicle::where('plate', $plate)->first();
 
-        if (!$vehicle) return ["message" => "Vehicle not found"];
+        if (!$vehicle) return throw new NotFoundHttpException("Vehicle not found");
 
         $instances = Instance::with('vehicle')->where('vehicle_id', $vehicle->id)
             ->orderBy('created_at', 'desc')
@@ -118,15 +120,26 @@ class ParkingService
     public function updateParkingInstance($id)
     {
         $instance = Instance::where('id', $id)->where('is_paid', false)->first();
-        if (!$instance) return ["message" => "Instance not found"];
+        if (!$instance) return throw new HttpException(404, "Instance not found");
 
         $vehicle = Vehicle::with('type')->find($instance->vehicle_id);
 
-        if ($vehicle->type->payment_rules != 'as_visitor') return ["message" => "This instance is not paid / paid monthly"];
+        if ($vehicle->type->payment_rules != 'as_visitor') return throw new HttpException(400, "Vehicle type is not visitor");
 
         $instance->is_paid = true;
         $instance->save();
 
         return ["message" => "success update instance as paid"];
+    }
+
+
+    public function deleteParkingInstances()
+    {
+        $instances = Instance::where('is_paid', false)->get();
+        foreach ($instances as $instance) {
+            $instance->delete();
+        }
+
+        return ["message" => "success delete instances"];
     }
 }

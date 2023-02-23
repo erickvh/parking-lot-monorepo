@@ -23,8 +23,10 @@ class ParkingController extends Controller
 
     public function checkout(Request $request)
     {
-        $vehicle = $this->parkingService->checkoutVehicle($request);
-        return $vehicle;
+        $content = $this->parkingService->checkoutVehicle($request);
+        if ($content['message'] == 'success') return response()->json($content, 200);
+
+        return response()->json($content, 200);
     }
 
     public function getParkingInstancesByPlate(Request $request)
@@ -33,19 +35,26 @@ class ParkingController extends Controller
         if (!$request->plate) return response()->json(["message" => "plate is required"], 400);
 
         $parkingInstances = $this->parkingService->getParkingInstancesByPlate($request->plate);
-        return $parkingInstances;
+
+        return response()->json($parkingInstances, 200);
     }
 
     public function getParkingInstances()
     {
         $parkingInstances = $this->parkingService->getParkingInstances();
-        return $parkingInstances;
+        return response()->json($parkingInstances, 200);
     }
 
 
     public function updateParkingInstance($id)
     {
         $parkingInstances = $this->parkingService->updateParkingInstance($id);
-        return $parkingInstances;
+        return response()->json($parkingInstances, 200);
+    }
+
+    public function deleteParkingInstances()
+    {
+        $parkingInstances = $this->parkingService->deleteParkingInstances();
+        return response()->json($parkingInstances, 200);
     }
 }
