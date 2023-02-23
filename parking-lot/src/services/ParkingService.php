@@ -67,12 +67,12 @@ class ParkingService
 
         $vehicle = Vehicle::with('type')->where('plate', $request->plate)->first();
 
-        if (!$vehicle) throw new HttpException(404, "Vehicle not found");
+        if (!$vehicle) return throw new HttpException(404, "Vehicle not found");
 
         $instance = Instance::where('vehicle_id', $vehicle->id)->whereNull('checkout')->first();
 
 
-        if (!$instance) throw new HttpException(404, "Instance not found");
+        if (!$instance) return throw new HttpException(404, "Instance not found");
 
         $instance->checkout = now();
 
@@ -95,7 +95,7 @@ class ParkingService
     {
         $vehicle = Vehicle::where('plate', $plate)->first();
 
-        if (!$vehicle) throw new NotFoundHttpException("Vehicle not found");
+        if (!$vehicle) return throw new NotFoundHttpException("Vehicle not found");
 
         $instances = Instance::with('vehicle')->where('vehicle_id', $vehicle->id)
             ->orderBy('created_at', 'desc')
@@ -120,7 +120,7 @@ class ParkingService
     public function updateParkingInstance($id)
     {
         $instance = Instance::where('id', $id)->where('is_paid', false)->first();
-        if (!$instance) throw new HttpException(404, "Instance not found");
+        if (!$instance) return throw new HttpException(404, "Instance not found");
 
         $vehicle = Vehicle::with('type')->find($instance->vehicle_id);
 
