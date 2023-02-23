@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix("payment")->group(function () {
+Route::prefix("payment")->middleware(['guard.auth'])->group(function () {
 
     Route::get("resident-debts", [PaymentController::class, "getResidentReport"]);
     Route::post("restart-month", [PaymentController::class, "restartMonth"]);
