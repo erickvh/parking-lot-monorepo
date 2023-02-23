@@ -27,5 +27,6 @@ Route::prefix('parking')->middleware(['auth.ms'])->group(function () {
     Route::post('/checkout', [ParkingController::class, 'checkout']);
     Route::get('/instances-by-plate', [ParkingController::class, 'getParkingInstancesByPlate']);
     Route::get('/instances', [ParkingController::class, 'getParkingInstances']);
+    Route::delete('instances', [ParkingController::class, 'deleteParkingInstances']);
     Route::put('instances/{id}/paid', [ParkingController::class, 'updateParkingInstance']);
 });

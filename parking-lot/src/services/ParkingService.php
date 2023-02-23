@@ -131,4 +131,15 @@ class ParkingService
 
         return ["message" => "success update instance as paid"];
     }
+
+
+    public function deleteParkingInstances()
+    {
+        $instances = Instance::where('is_paid', false)->get();
+        foreach ($instances as $instance) {
+            $instance->delete();
+        }
+
+        return ["message" => "success delete instances"];
+    }
 }

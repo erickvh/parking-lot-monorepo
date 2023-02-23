@@ -51,4 +51,10 @@ class ParkingController extends Controller
         $parkingInstances = $this->parkingService->updateParkingInstance($id);
         return response()->json($parkingInstances, 200);
     }
+
+    public function deleteParkingInstances()
+    {
+        $parkingInstances = $this->parkingService->deleteParkingInstances();
+        return response()->json($parkingInstances, 200);
+    }
 }
